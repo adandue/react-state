@@ -34,7 +34,7 @@ const UseState = ({ name }) => {
         <div>
             <h2>Eliminar {name}</h2>
             <p>Por favor, escribe el código de seguridad.</p>
-            {error &&(
+            {(error && !loading) && (
                 <>
                 <p>Error: El código es incorrecto</p>
                 <p>Vuelve a intentarlo</p>
@@ -52,7 +52,10 @@ const UseState = ({ name }) => {
                 }}
                 />
             <button
-                onClick={() => setLoading(true)}
+                onClick={() => {
+                    // setError(false) Este fue
+                    setLoading(true)
+                    }}
             >   Comprobar</button>
         </div>
     )

@@ -3,7 +3,39 @@ import React from "react";
 const SECURITY_CODE = 'paradigma'
 
 const UseReducer = ({ name }) => {
+    const initialState = {
+        value: '',
+        error: false,
+        loading: false,
+        deleted: false,
+        confirmed: false
+    }
+
     const [state, dispatch] = React.useReducer(reducer, initialState)
+
+    const onConfirm = () => {
+        dispatch({ type: actionTypes.confirm})
+    }
+
+    const onError = () => {
+        dispatch({ type: actionTypes.error})
+    }
+
+    const onWrite = ({ target: {value} }) => {
+        dispatch({ type: actionTypes.write, payload: value})
+    }
+
+    const onCheck = () => {
+        dispatch({ type: actionTypes.check})
+    }
+
+    const onDelete = () => {
+        dispatch({ type: actionTypes.delete})
+    }
+
+    const onReset = () => {
+        dispatch({ type: actionTypes.reset})
+    }
 
 
     React.useEffect(() => {
@@ -14,13 +46,9 @@ const UseReducer = ({ name }) => {
                 console.log('Haciendo la validación')
     
                 if(state.value === SECURITY_CODE) {
-                    dispatch({
-                        type: 'CONFIRM'
-                    })
+                    onConfirm()
                 } else {
-                    dispatch({
-                        type: 'ERROR'
-                    })
+                    onError()
                 }
     
                 console.log('Terminando la validación')
@@ -48,44 +76,21 @@ const UseReducer = ({ name }) => {
                 <input
                     placeholder="Código de seguridad"
                     value={state.value}
-                    onChange={(event) => {
-                        dispatch({
-                        type: 'WRITE',
-                        payload: event.target.value,
-                        })
-                        // onWrite(event.target.value)
-                    }}
+                    onChange={onWrite}
                     />
-                <button
-                    onClick={() => {
-                        // setError(false) Este fue
-                        dispatch({
-                        type: 'CHECK'
-                    })
-                        }}
-                >   Comprobar</button>
+                <button onClick = {onCheck}>
+                Comprobar
+                </button>
             </div>
         )
     } else if (!!state.confirmed && !state.deleted) {
         return (
             <React.Fragment>
                 <p>¿Estás seguro que deseas eliminar {name}?</p>
-                <button
-                    onClick={() => {
-                        dispatch({
-                        type: 'DELETE'
-                        })
-                    }}
-                >
+                <button onClick = {onDelete}>
                 Sí, eliminar
                 </button>
-                <button
-                    onClick={() => {
-                        dispatch({
-                        type: 'RESET'
-                        })
-                    }}
-                >
+                <button onClick = {onReset}>
                 No, volver
                 </button>
             </React.Fragment>
@@ -94,13 +99,7 @@ const UseReducer = ({ name }) => {
         return (
             <React.Fragment>
                 <p>Eliminado con éxito</p>
-                <button
-                    onClick={() => {
-                        dispatch({
-                        type: 'RESET'
-                        })
-                    }}
-                >
+                <button onClick = {onReset}>
                 Resetear, volver atrás
                 </button>
             </React.Fragment>
@@ -110,39 +109,40 @@ const UseReducer = ({ name }) => {
 
 export { UseReducer }
 
-const initialState = {
-    value: '',
-    error: false,
-    loading: false,
-    deleted: false,
-    confirmed: false
+const actionTypes = {
+    confirm: 'CONFIRM',
+    error: 'ERROR',
+    write: 'WRITE',
+    check: 'CHECK',
+    delete: 'DELETE',
+    reset: 'RESET',
 }
 
 const reducerObject = (state, payload) => ({
-    'CONFIRM': {
+    [actionTypes.confirm]: {
         ...state, 
         loading: false, 
         error: false, 
         confirmed: true 
     },
-    'ERROR': {
+    [actionTypes.error]: {
         ...state,
         error: true,
         loading: false
     },
-    'WRITE': {
+    [actionTypes.write]: {
         ...state,
         value: payload,
     },
-    'CHECK': {
+    [actionTypes.check]: {
         ...state, 
         loading: true 
     },
-    'DELETE': {
+    [actionTypes.delete]: {
         ...state,
         deleted: true,
     },
-    'RESET': {
+    [actionTypes.reset]: {
         ...state,
         confirmed: false,
         deleted: false,

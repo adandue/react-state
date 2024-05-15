@@ -13,30 +13,15 @@ const UseReducer = ({ name }) => {
 
     const [state, dispatch] = React.useReducer(reducer, initialState)
 
-    const onConfirm = () => {
-        dispatch({ type: actionTypes.confirm})
-    }
-
-    const onError = () => {
-        dispatch({ type: actionTypes.error})
-    }
+    const onConfirm = () => dispatch({ type: actionTypes.confirm})
+    const onError = () => dispatch({ type: actionTypes.error})
+    const onCheck = () => dispatch({ type: actionTypes.check})
+    const onDelete = () => dispatch({ type: actionTypes.delete})
+    const onReset = () => dispatch({ type: actionTypes.reset})
 
     const onWrite = ({ target: {value} }) => {
         dispatch({ type: actionTypes.write, payload: value})
     }
-
-    const onCheck = () => {
-        dispatch({ type: actionTypes.check})
-    }
-
-    const onDelete = () => {
-        dispatch({ type: actionTypes.delete})
-    }
-
-    const onReset = () => {
-        dispatch({ type: actionTypes.reset})
-    }
-
 
     React.useEffect(() => {
         console.log('Empezando el efecto')
